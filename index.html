@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Ôn thi GDKT&PL - Khối 11 | Trần Cường 11 D3</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0d6efd;
+            --danger: #dc3545;
+            --success: #198754;
+            --light-bg: #f8f9fa;
+            --border: #dee2e6;
+            --text: #212529;
+            --shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f1f3f5;
+            margin: 0;
+            padding: 0 0 40px;
+            color: var(--text);
+        }
+        .header {
+            background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+            color: #fff;
+            padding: 18px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header .admin {
+            font-weight: 600;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 14px;
+            border-radius: 30px;
+            letter-spacing: 0.3px;
+        }
+        .header .exam-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-align: center;
+            flex: 1 1 auto;
+        }
+        .timer {
+            background: #fff;
+            color: #0d6efd;
+            font-weight: 700;
+            font-size: 1.3rem;
+            padding: 6px 16px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.5);
+        }
+        .container-main {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        .card {
+            border: none;
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            background: #fff;
+            transition: 0.2s;
+        }
+        .card-header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 14px 20px;
+            border-radius: 14px 14px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #0d6efd;
+        }
+        .card-body {
+            padding: 18px 20px;
+        }
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 12px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        .options label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 14px;
+            margin-bottom: 6px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #fdfdfd;
+            cursor: pointer;
+            transition: all 0.15s;
+            line-height: 1.5;
+        }
+        .options label:hover {
+            background: #eef5ff;
+            border-color: #0d6efd;
+        }
+        .options input[type="radio"] {
+            margin-top: 3px;
+            accent-color: #0d6efd;
+            transform: scale(1.15);
+            flex-shrink: 0;
+        }
+        .sub-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .sub-option .form-check-input {
+            margin: 0;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+        .sub-option .form-check-label {
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #0d6efd;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-style: italic;
+            white-space: pre-wrap;
+        }
+        .btn-submit {
+            padding: 12px 28px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-radius: 40px;
+            box-shadow: 0 4px 12px rgba(13,110,253,0.35);
+            transition: all 0.3s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(13,110,253,0.45);
+        }
+        .result-summary {
+            background: #e9f5e9;
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border: 1px solid #b7dfb7;
+            font-size: 1.1rem;
+        }
+        .correct-highlight {
+            background: #d1e7dd;
+            border-color: #a3cfbb;
+        }
+        .incorrect-highlight {
+            background: #f8d7da;
+            border-color: #f1aeb5;
+        }
+        .footer-note {
+            text-align: center;
+            padding: 15px;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 30px;
+        }
+        @media (max-width: 576px) {
+            .header {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .timer {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <span class="admin">👤 Admin: Trần Cường 11 D3</span>
+        <span class="exam-title">📘 ĐỀ ÔN GDKT&PL - HK2 (2025-2026)</span>
+        <div class="timer" id="timerDisplay">⏳ 90:00</div>
+    </div>
+
+    <div class="container-main" id="examContainer">
+        <!-- Nội dung câu hỏi sẽ được render bằng JavaScript -->
+    </div>
+
+    <div class="text-center mb-4">
+        <button class="btn btn-primary btn-submit" id="submitBtn" onclick="submitExam()">📩 Nộp bài và xem kết quả</button>
+    </div>
+
+    <div class="footer-note">
+        © 2026 - Đề cương ôn tập cuối kỳ II | Môn Giáo dục Kinh tế và Pháp luật khối 11
+    </div>
+
+    <script>
+        // ================= DỮ LIỆU CÂU HỎI =================
+        // Phần I: 61 câu trắc nghiệm 1 đáp án
+        const questionsPart1 = [
+            { q: "Câu 1: Nội dung nào dưới đây thể hiện bình đẳng giới trong lĩnh vực chính trị?",
+              opts: ["A. Thực hiện chế độ thai sản cho phụ nữ.", "B. Bình đẳng trong tham gia hoạt động xã hội.", "C. Bình đẳng về độ tuổi đi học, đào tạo, bồi dưỡng.", "D. Bình đẳng về hưởng chế độ chăm sóc sức khỏe."],
+              ans: 1 },
+            { q: "Câu 2: Hai vợ chồng anh B kết hôn được 3 năm. Vì nghĩ rằng chỉ có mình đi làm, còn vợ mình ở nhà nội trợ nên anh B quyết định mọi khoản chi tiêu trong gia đình. Việc làm của anh B vi phạm quy định về bình đẳng giới trong lĩnh vực",
+              opts: ["A. gia đình.", "B. kinh tế.", "C. xã hội.", "D. chi tiêu."], ans: 0 },
+            { q: "Câu 3: Phát triển bình dân học vụ và phát triển văn nghệ dân tộc ở các vùng thiểu số, phổ biến việc la tinh hóa tiếng nói của các dân tộc chưa có chữ và bảo đảm việc dạy học bằng các thứ tiếng đó trong các trường của dân tộc thiểu số là thể hiện bình đẳng giữa các dân tộc về",
+              opts: ["A. chính trị.", "B. kinh tế.", "C. Văn hóa, giáo dục.", "D. Kinh tế, văn hóa."], ans: 2 },
+            { q: "Câu 4: Theo quy định của pháp luật, bình đẳng giữa các dân tộc trên lĩnh vực chính trị thể hiện ở việc các dân tộc đều được",
+              opts: ["A. giữ gìn tiếng nói và chữ viết.", "B. khôi phục làng nghề truyền thống.", "C. tạo điều kiện phát triển kinh tế.", "D. tham gia bộ máy nhà nước."], ans: 3 },
+            { q: "Câu 5: Công dân bình đẳng về quyền và nghĩa vụ, quyền của công dân không tách rời",
+              opts: ["A. nghĩa vụ.", "B. nhiệm vụ.", "C. trách nhiệm.", "D. quy định."], ans: 0 },
+            { q: "Câu 6: Việc đảm bảo tỉ lệ nữ thích đáng trong bổ nhiệm các chức danh trong cơ quan nhà nước là phù hợp với mục tiêu quốc gia về bình đẳng giới trên lĩnh vực",
+              opts: ["A. chính trị.", "B. kinh tế.", "C. gia đình.", "D. văn hóa."], ans: 0 },
+            { q: "Câu 7: Việc công dân tham gia góp ý dự thảo các văn bản quy phạm pháp luật là thực hiện quyền nào dưới đây?",
+              opts: ["A. Tham gia quản lí nhà nước và xã hội.", "B. Tham gia xây dựng Tổ quốc.", "C. Tham gia bảo vệ Tổ quốc.", "D. Tham gia góp ý các vấn đề chung."], ans: 0 },
+            { q: "Câu 8: Theo quy định của pháp luật, để bảo vệ quyền và lợi ích hợp pháp của mình, khi thực hiện quyền khiếu nại, chủ thể khiếu nại có quyền cung cấp chứng cứ và",
+              opts: ["A. hạ uy tín người giải quyết khiếu nại.", "B. giải trình các nội dung chứng cứ.", "C. hối lộ người giải quyết khiếu nại.", "D. từ chối thực hiện quyết định."], ans: 1 },
+            { q: "Câu 9: Theo quy định của pháp luật, để bảo vệ vững chắc Tổ quốc Việt Nam, mọi công dân có nghĩa vụ",
+              opts: ["A. thúc đẩy diễn biến hòa bình.", "B. kích động biểu tình trái phép.", "C. giữ gìn an ninh trật tự xã hội.", "D. từ chối nghĩa vụ quân sự."], ans: 2 },
+            { q: "Câu 10: Nội dung nào dưới đây không phải là hậu quả của hành vi vi phạm quyền và nghĩa vụ của công dân trong tham gia quản lí nhà nước và xã hội?",
+              opts: ["A. Làm giảm niềm tin của công dân vào sự quản lí của Nhà nước.", "B. Không phát huy được vai trò của công dân trong quản lí nhà nước.", "C. Ảnh hưởng đến sự phát triển của đất nước.", "D. Phát huy được vai trò làm chủ của công dân."], ans: 3 },
+            { q: "Câu 11: Theo quy định của pháp luật, người làm nhiệm vụ chuyển phát vi phạm quyền được bảo đảm an toàn và bí mật thư tín của khách hàng khi",
+              opts: ["A. thông báo khách hàng nhận thư.", "B. đưa thư đến tận tay người nhận.", "C. lén đọc thư của khách hàng.", "D. giao thư đến đúng địa chỉ."], ans: 2 },
+            { q: "Câu 12: Một trong những biểu hiện của hành vi vi phạm quyền và nghĩa vụ của công dân về tự do tín ngưỡng tôn giáo đó là",
+              opts: ["A. cứu rỗi, giúp đỡ những người mắc bệnh.", "B. lợi dụng hoạt động tôn giáo để trục lợi.", "C. xâm phạm sức khỏe của mỗi công dân.", "D. xâm phạm đến tính mạng của công dân."], ans: 1 },
+            { q: "Câu 13: Theo quy định của pháp luật, quyền tự do báo chí của công dân thể hiện ở việc, mọi công dân đều được",
+              opts: ["A. phản hồi thông tin báo chí.", "B. phản bác mọi quan điểm.", "C. viết bài sai nội dung phản ánh.", "D. đăng mọi bài viết cá nhân."], ans: 0 },
+            { q: "Câu 14. Công dân có thể viết bài gửi đăng báo, bày tỏ ý kiến của mình về chủ trương, chính sách và pháp luật của Nhà nước là thực hiện quyền nào dưới đây của công dân?",
+              opts: ["A. Ứng cử, bầu cử.", "B. Tự do ngôn luận.", "C. Khiếu nại.", "D. Tố cáo."], ans: 1 },
+            { q: "Câu 15. Tự tiện bắt và giam giữ người không theo quy định của pháp luật là hành vi trái pháp luật xâm phạm đến quyền",
+              opts: ["A. tiếp cận thông tin.", "B. được pháp luật bảo hộ tính mạng.", "C. bất khả xâm phạm về thân thể.", "D. tự do ngôn luận."], ans: 2 },
+            { q: "Câu 16: Một trong những hình thức để công dân thực hiện đúng quyền tự do ngôn luận là",
+              opts: ["A. tung tin, bịa đặt nói xấu người khác.", "B. kiến nghị với đại biểu Quốc hội.", "C. phát biểu ý kiến trong mọi hoàn cảnh.", "D. theo dõi tội phạm nguy hiểm."], ans: 1 },
+            { q: "Câu 17: Bình đẳng về trách nhiệm pháp lí có nghĩa là bất kì công dân nào vi phạm pháp luật đều phải chịu trách nhiệm về",
+              opts: ["A. lời khai nhân chứng cung cấp.", "B. dấu hiệu nghi ngờ phạm tội.", "C. tiến trình phục dựng hiện trường.", "D. hành vi vi phạm của mình."], ans: 3 },
+            { q: "Câu 18: Một trong những quy định của pháp luật về bình đẳng giới trong lĩnh vực chính trị là nam, nữ bình đẳng trong việc",
+              opts: ["A. tham gia các hoạt động xã hội.", "B. tiếp cận nguồn vốn đầu tư.", "C. lựa chọn ngành nghề học tập.", "D. tiếp cận các cơ hội việc làm."], ans: 0 },
+            { q: "Câu 19: Theo quy định của pháp luật, nội dung nào dưới đây không thể hiện quyền bình đẳng giữa các dân tộc trong lĩnh vực văn hóa?",
+              opts: ["A. Phủ sóng truyền hình quốc gia.", "B. Khôi phục lễ hội truyền thống.", "C. Phát triển văn hóa cộng đồng.", "D. Xây dựng trường dân tộc nội trú."], ans: 3 },
+            { q: "Câu 20: Theo quy định của pháp luật, các tôn giáo hợp pháp đều có quyền được",
+              opts: ["A. tổ chức ngân hàng riêng.", "B. tổ chức quân đội riêng.", "C. tổ chức sinh hoạt tôn giáo.", "D. tổ chức chống phá nhà nước."], ans: 2 },
+            { q: "Câu 21: Phát biểu nào dưới đây là sai khi nói về quyền của công dân trong tham gia quản lý nhà nước và xã hội?",
+              opts: ["A. Công dân thực hiện quyền tham gia quản lý nhà nước và xã hội bằng cách tham gia biểu quyết các vấn đề quan trọng của đất nước.", "B. Công dân thực hiện quyền tham gia quản lý nhà nước và xã hội bằng cách bày tỏ ý kiến khi nhà nước trưng cầu ý dân.", "C. Công dân thực hiện quyền tham gia quản lý nhà nước và xã hội bằng cách tổ chức tập trung đông người phản đối việc giải phóng mặt bằng của cơ quan chức năng.", "D. Công dân thực hiện quyền tham gia quản lý nhà nước và xã hội bằng cách tham gia hội nghị góp ý kiến để xây dựng các văn bản pháp luật."], ans: 2 },
+            { q: "Câu 22: Theo quy định của luật bầu cử, cử tri đủ điều kiện tham gia bầu cử được quyền ghi tên vào mấy danh sách cử tri ở nơi mình thường trú hoặc tạm trú?",
+              opts: ["A. 2.", "B. 1.", "C. 3.", "D. 4."], ans: 1 },
+            { q: "Câu 23: Theo quy định của pháp luật, khi thực hiện quyền tố cáo, người khiếu nại có trách nhiệm cung cấp thông tin, tài liệu liên quan cho người giải quyết khiếu nại và phải chịu trách nhiệm về",
+              opts: ["A. nội dung thông tin cung cấp.", "B. quy trình giải quyết khiếu nại.", "C. mọi quyết định đã ban hành.", "D. chi phí tiếp nhận thông tin."], ans: 0 },
+            { q: "Câu 24: Công dân thể hiện trách nhiệm đối với việc xây dựng và bảo vệ Tổ quốc khi thực hiện hành vi nào sau đây?",
+              opts: ["A. Giữ gìn an ninh trật tự.", "B. Tài trợ hoạt động khủng bố.", "C. Tìm hiểu mức sống dân cư.", "D. Tàng trữ trái phép vũ khí."], ans: 0 },
+            { q: "Câu 25: Hành vi bắt, giam giữ người trái pháp luật là xâm phạm đến quyền nào dưới đây của công dân?",
+              opts: ["A. Được đảm bảo về tính mạng.", "B. Tự do đi lại và lao động.", "C. Bất khả xâm phạm về thân thể.", "D. Pháp luật bảo hộ về sức khỏe."], ans: 2 },
+            { q: "Câu 26: Theo quy định của pháp luật, tự tiện vào nhà của người khác là vi phạm quyền bất khả xâm phạm về",
+              opts: ["A. chỗ ở.", "B. tự do cá nhân.", "C. nơi làm việc.", "D. bí mật đời tư."], ans: 0 },
+            { q: "Câu 27: Theo quy định của pháp luật, công dân tự tiện mở thư của người khác là vi phạm quyền được bảo đảm an toàn và bí mật",
+              opts: ["A. an sinh xã hội.", "B. thông tư liên ngành.", "C. thư tín, điện tín.", "D. di sản quốc gia."], ans: 2 },
+            { q: "Câu 28: Theo quy định của pháp luật, quyền tự do báo chí của công dân thể hiện ở việc, mọi công dân nếu có đủ năng lực đều có quyền được",
+              opts: ["A. cung cấp tiền làm từ thiện.", "B. thay đổi quan hệ nhân thân.", "C. bày tỏ ý kiến trong cuộc họp.", "D. cung cấp thông tin cho tòa soạn."], ans: 3 },
+            { q: "Câu 29: Theo quy định của pháp luật, đối tượng nào dưới đây không được thực hiện quyền bầu cử, ứng cử?",
+              opts: ["A. Người đang đảm nhiệm chức vụ.", "B. Người mất năng lực hành vi dân sự.", "C. Người đang điều trị tại bệnh viện.", "D. Người đang đi công tác xa nhà."], ans: 1 },
+            { q: "Câu 30: Khi thực hiện quyền khiếu nại của mình, người khiếu nại không có nghĩa vụ nào dưới đây?",
+              opts: ["A. Khiếu nại đúng người có thẩm quyền.", "B. Cung cấp thông tin cho người giải quyết.", "C. Chịu trách nhiệm về thông tin cung cấp.", "D. Phải bảo vệ mọi nguồn thu nhập cá nhân."], ans: 3 },
+            { q: "Câu 31: Những nhận định nào dưới đây là đúng? (a) Nghĩa vụ quân sự là bắt buộc đối với mọi người. (b) Trốn tránh nghĩa vụ quân sự chỉ bị xử phạt hành chính. (c) Phản bội Tổ quốc là tội nặng nhất. (d) Xây dựng, bảo vệ lãnh thổ biên giới quốc gia chỉ là nhiệm vụ của lực lượng vũ trang. (e) Phòng chống tội phạm không phải là nội dung của quyền và nghĩa vụ công dân về bảo vệ Tổ quốc.",
+              opts: ["A. (a) và (c).", "B. (b) và (d).", "C. (c).", "D. (e)."], ans: 2 },
+            { q: "Câu 32: Theo quy định của pháp luật, công dân có hành vi nào sau đây xâm phạm đến danh dự, nhân phẩm của người khác?",
+              opts: ["A. Trêu chọc bạn trong lớp.", "B. Giáo viên phê bình học sinh trên lớp.", "C. Xúc phạm hạ uy tín người khác.", "D. Cha mẹ phê bình con khi mắc lỗi."], ans: 2 },
+            { q: "Câu 33: Theo quy định của pháp luật, bình đẳng về trách nhiệm pháp lí có nghĩa là bất kì công dân nào vi phạm pháp luật đều",
+              opts: ["A. bị tước quyền con người.", "B. được giảm nhẹ hình phạt.", "C. bị xử lí nghiêm minh.", "D. được đền bù thiệt hại."], ans: 2 },
+            { q: "Câu 34: Để đảm bảo bình đẳng giới trên lĩnh vực chính trị, nội dung nào dưới đây phù hợp với quy định của pháp luật về tỉ lệ nữ tham gia làm đại biểu Hội đồng nhân dân?",
+              opts: ["A. Tỉ lệ nữ phải bằng với tỉ lệ nam.", "B. Cần đảm bảo tỉ lệ thích đáng nữ đại biểu.", "C. Nữ chỉ cần có một người đại diện.", "D. Tỉ lệ nữ nhất định phải nhiều hơn nam."], ans: 1 },
+            { q: "Câu 35: Theo quy định của pháp luật, nội dung nào dưới đây không thể hiện quyền các dân tộc bình đẳng trong lĩnh vực văn hóa?",
+              opts: ["A. Phát triển văn hóa truyền thống.", "B. Phát triển kinh tế gia đình.", "C. Khôi phục ngôn ngữ và chữ viết.", "D. Bảo tồn trang phục của dân tộc mình."], ans: 1 },
+            { q: "Câu 36: Các tổ chức tôn giáo, cũng như người theo các tôn giáo khác nhau dù ở bất kì cương vị nào nếu vi phạm pháp luật đều",
+              opts: ["A. được quyền phủ nhận lời khai nhân chứng.", "B. phải tham gia lao động công ích.", "C. phải từ bỏ sở hữu mọi tài sản.", "D. bị xử lí theo quy định của pháp luật."], ans: 3 },
+            { q: "Câu 37: Phát biểu nào dưới đây là sai khi nói về quyền của công dân trong tham gia quản lý nhà nước và xã hội?",
+              opts: ["A. Công dân thực hiện quyền tham gia quản lý nhà nước và xã hội khi tham gia giám sát hoạt động của bộ máy nhà nước.", "B. Công dân thực hiện quyền tham gia quản lý nhà nước và xã hội khi tham gia đấu tranh với những hành vi tham nhũng lãng phí của cán bộ công chức.", "C. Công dân thực hiện quyền tham gia quản lý nhà nước và xã hội khi tham gia đóng góp ý kiến đối với các vấn đề liên quan đến bản thân mình tại địa phương.", "D. Công dân thực hiện quyền tham gia quản lý nhà nước và xã hội khi tổ chức chống phá hoạt động của chính quyền và bộ máy nhà nước."], ans: 3 },
+            { q: "Câu 38: Hiến pháp quy định công dân Việt Nam đủ bao nhiêu tuổi trở lên có quyền ứng cử?",
+              opts: ["A. 16.", "B. 18.", "C. 17.", "D. 21."], ans: 3 },
+            { q: "Câu 39: Theo quy định của pháp luật, trong quá trình thực hiện khiếu nại, mọi công dân đều có quyền",
+              opts: ["A. thuê côn đồ sử dụng bạo lực.", "B. nhờ xã hội đen giải quyết trước.", "C. nhờ luật sư tư vấn pháp lý.", "D. sử dụng bạo lực để uy hiếp."], ans: 2 },
+            { q: "Câu 40: Công dân thể hiện trách nhiệm đối với việc xây dựng và bảo vệ Tổ quốc khi thực hiện hành vi nào sau đây?",
+              opts: ["A. Tổ chức nhập cảnh trái phép.", "B. Đăng kí nghĩa vụ khi đến tuổi.", "C. Tìm hiểu các nghi lễ tôn giáo.", "D. Xâm phạm an ninh quốc gia."], ans: 1 },
+            { q: "Câu 41: Bắt người trái pháp luật là xâm phạm đến quyền nào sau đây của công dân?",
+              opts: ["A. Bắt người hợp pháp của công dân.", "B. Bất khả xâm phạm thân thể của công dân.", "C. Bảo hộ về tính mạng, sức khỏe của công dân.", "D. Bất khả xâm phạm về chỗ ở của công dân."], ans: 1 },
+            { q: "Câu 42: Tự tiện khám chỗ ở của người khác là xâm phạm đến quyền cơ bản nào của công dân?",
+              opts: ["A. Bảo hộ về tính mạng sức khỏe.", "B. Bất khả xâm phạm về chỗ ở.", "C. Bất khả xâm phạm về thân thể.", "D. Bảo hộ về danh dự nhân phẩm."], ans: 1 },
+            { q: "Câu 43: Tự tiện bóc mở, thu giữ, tiêu hủy thư tín của người khác là xâm phạm quyền nào dưới đây của công dân?",
+              opts: ["A. Quyền bất khả xâm phạm về chỗ ở.", "B. Quyền được đảm bảo an toàn nơi cư trú.", "C. Đảm bảo an toàn thư tín, điện thoại, điện tín.", "D. Quyền bất khả xâm phạm về thân thể."], ans: 2 },
+            { q: "Câu 44: Quyền của công dân về tự do báo chí thể hiện ở việc, các tác phẩm báo chí do công dân sáng tác nếu đủ điều kiện theo quy định của pháp luật đều có quyền được",
+              opts: ["A. đăng bài công khai.", "B. xúc phạm người khác.", "C. xuyên tạc nội dung.", "D. chuyển quyền tác giả."], ans: 0 },
+            { q: "Câu 45: Theo quy định của pháp luật, công dân được thực hiện quyền bầu cử trong trường hợp đang",
+              opts: ["A. bị tước quyền công dân.", "B. công tác ngoài hải đảo.", "C. chấp hành hình phạt tù.", "D. mất năng lực hành vi dân sự."], ans: 1 },
+            { q: "Câu 46: Theo quy định của pháp luật, khi thực hiện quyền khiếu nại, người khiếu nại không được thực hiện hành vi nào sau đây?",
+              opts: ["A. Sao chụp tài liệu do người giải quyết cung cấp.", "B. Nhận quyết định về giải quyết khiếu nại.", "C. Từ chối thi hành quyết định nếu khiếu nại sai.", "D. Yêu cầu bồi thường nếu khiếu nại đúng."], ans: 2 },
+            { q: "Câu 47: Những hành vi nào vi phạm quyền và nghĩa vụ của công dân về bảo vệ Tổ quốc? (a) Anh A chia sẻ những thông tin sai sự thật về an ninh trật tự trên mạng xã hội. (b) Anh C tích cực tham gia phong trào ngư dân bám biển, bảo vệ chủ quyền biển đảo. (c) Bạn B không báo cho các cơ quan và người có trách nhiệm khi phát hiện hành vi gây nguy hại đến an ninh quốc gia. (d) Chị D tham gia tuyên truyền, vận động mọi người tham gia phong trào \"Toàn dân bảo vệ an ninh Tổ quốc\".",
+              opts: ["A. (a) và (c).", "B. (a) và (d).", "C. (b) và (c).", "D. (b) và (d)."], ans: 0 },
+            { q: "Câu 48: Theo quy định của pháp luật, công dân có hành vi nào sau đây xâm phạm đến danh dự, nhân phẩm của người khác?",
+              opts: ["A. Ghép ảnh xúc phạm cá nhân.", "B. Chủ động đối thoại trực tuyến.", "C. Bày tỏ sở thích cá nhân.", "D. Đề xuất đổi mới chính sách."], ans: 0 },
+            { q: "Câu 49: Hành vi tự ý bóc, mở, tiêu hủy thư, điện tín của người khác thì tùy theo mức độ vi phạm có thể phải chịu trách nhiệm pháp lí nào dưới đây?",
+              opts: ["A. Xử phạt dân sự hoặc truy cứu trách nhiệm hình sự.", "B. Xử phạt hành chính và truy cứu trách nhiệm hình sự.", "C. Bị xử phạt dân sự, không bị xử phạt hình sự.", "D. Bị xử phạt hành chính, không bị phạt hình sự."], ans: 0 },
+            { q: "Câu 50: Ông B viết bài đăng báo ca ngợi lực lượng chức năng đã có nhiều cố gắng nỗ lực để tạo điều kiện cho công dân làm căn cước công dân. Ông B đã thực hiện quyền nào sau đây của công dân?",
+              opts: ["A. Thông cáo báo chí.", "B. Tự do báo chí.", "C. Quản trị truyền thông.", "D. Đối thoại trực tuyến."], ans: 1 },
+            { q: "Câu 51: Do có mâu thuẫn trong việc làm ăn nên anh A đã thuê người bắt cóc vợ con anh B suốt 3 ngày và yêu cầu anh B đưa tiền chuộc mới thả người. Trong trường hợp trên, anh B có thể thực hiện quyền nào dưới đây để bảo vệ vợ con mình?",
+              opts: ["A. Khiếu nại.", "B. Tố cáo.", "C. Tự do.", "D. Khiếu kiện."], ans: 1 },
+            { q: "Câu 52: Khi tố cáo, anh B cần thực hiện nghĩa vụ nào dưới đây?",
+              opts: ["A. Trình bày trung thực nội dung tố cáo.", "B. Giữ bí mật thông tin cá nhân.", "C. Rút đơn tố cáo khi chưa đủ chứng cứ.", "D. Bồi thường thiệt hại khi tố cáo."], ans: 0 },
+            { q: "Câu 53: Anh H nợ của anh C một số tiền lớn nhưng không có tiền trả. Do lo sợ anh C đến đòi nợ nên anh H đã trốn khỏi địa phương, đến ở nhờ nhà chị gái là N. Sau một thời gian tìm kiếm, anh C đã nắm được thông tin anh H đang trốn ở nhà chị N nên đã đến đòi gặp anh H. Khi đến nơi, anh C xông vào nhà của chị N tìm anh H nhưng bị chị ngăn lại, kiên quyết không cho gặp dẫn đến xô xát xảy ra giữa hai người. Hành vi của anh C đã xâm phạm đến quyền nào dưới đây của công dân?",
+              opts: ["A. Quyền được bảo hộ về nơi ở.", "B. Quyền bất khả xâm phạm về chỗ ở.", "C. Quyền đảm an toàn, bí mật về chỗ ở.", "D. Quyền được bảo vệ nhà ở."], ans: 1 },
+            { q: "Câu 54: Để tránh tình huống vi phạm pháp luật như trên, anh C cần",
+              opts: ["A. xông ngay vào nhà chị N đòi anh H trả nợ.", "B. kêu thêm người đến để hỗ trợ bắt anh H.", "C. bắt chị N ra khỏi nhà nếu không sẽ đuổi chị đi.", "D. báo ngay cho cơ quan nhà nước có thẩm quyền để xử lí."], ans: 3 },
+            { q: "Câu 55: Trong kỳ bầu cử đại biểu Hội đồng nhân dân các cấp, chị M và anh K cùng nộp hồ sơ tự ứng cử tại địa phương. Cả hai đều có trình độ chuyên môn thạc sĩ và đang công tác tại các cơ quan nhà nước. Trong quá trình niêm yết danh sách và tiếp xúc cử tri, Ủy ban bầu cử luôn đảm bảo các điều kiện về thông tin, thời gian trình bày và vận động bầu cử cho chị M và anh K là hoàn toàn ngang nhau. Kết quả, cả hai đều nhận được sự tín nhiệm cao từ cử tri nhờ vào năng lực và tâm huyết đóng góp cho cộng đồng. Việc chị M và anh K cùng được tự ứng cử thể hiện bình đẳng giới trong lĩnh vực nào dưới đây?",
+              opts: ["A. Kinh tế.", "B. Lao động.", "C. Chính trị.", "D. Văn hóa."], ans: 2 },
+            { q: "Câu 56: Việc đảm bảo các điều kiện vận động bầu cử ngang nhau cho chị M và anh K nhằm mục đích gì?",
+              opts: ["A. Tạo ra sự cạnh tranh gay gắt để loại bỏ người có ít kinh nghiệm hơn.", "B. Bảo đảm nam, nữ có cơ hội cùng có tiếng nói chung và vai trò ngang nhau.", "C. Buộc cử tri phải bầu cho cả hai người để đạt chỉ tiêu về giới tính.", "D. Giảm thiểu các chi phí tổ chức sự kiện cho Ủy ban bầu cử địa phương."], ans: 1 },
+            { q: "Câu 57: Tại một điểm bầu cử đại biểu Quốc hội, bà M (65 tuổi) do thị lực kém nên đã nhờ con trai là anh K viết hộ phiếu bầu theo sự lựa chọn của bà. Sau khi anh K viết xong, bà M đã tự tay bỏ phiếu vào hòm phiếu. Cùng lúc đó, ông D là thành viên tổ bầu cử thấy chị H còn lăn tăn trong việc lựa chọn các ứng viên nên đã lại gần xem nội dung phiếu bầu và gợi ý chị H nên bầu cho anh V vì anh V là người có năng lực, thấy hợp lý chị H đã bầu theo ý của anh V. Từ nội dung thông tin trên, căn cứ vào các quy định của pháp luật về bầu cử, ứng cử, nhận định nào dưới đây là sai?",
+              opts: ["A. Bà M không vi phạm nguyên tắc bầu cử.", "B. Việc làm của anh K phù hợp với nguyên tắc bầu cử.", "C. Chị H không vi phạm nguyên tắc bầu cử.", "D. Ông D vi phạm nguyên tắc bầu cử."], ans: 2 },
+            { q: "Câu 58: Việc bà M nhờ anh K viết hộ phiếu bầu do thị lực kém vẫn đảm bảo nguyên tắc trực tiếp vì",
+              opts: ["A. bà M là người trực tiếp bỏ phiếu vào hòm phiếu theo ý chí của mình.", "B. anh K là người thân trong gia đình nên được quyền bầu thay.", "C. bà M đã ủy quyền hoàn toàn quyền bầu cử của mình cho anh K.", "D. anh K đã nộp thẻ cử tri của cả hai mẹ con cho tổ bầu cử."], ans: 0 },
+            { q: "Câu 59: Nghi ngờ cháu B lấy trộm điện thoại của mình, bà M cùng con gái là chị N xông vào nhà cháu B đòi kiểm tra. Thấy cháu B đang cầm điện thoại của mình, hai mẹ con bà M xông tới giật điện thoại, chửi mắng và tát cháu B. Đi làm về, thấy cháu B kể lại mọi chuyện, vợ chồng anh K là bố mẹ cháu B đã chạy sang nhà bà M để làm rõ chuyện. Thấy bà M cố tình đóng cửa không cho vào nhà, anh K đã đạp cửa xông vào. Hai vợ chồng anh K đã to tiếng với bà M và hai bên xảy ra ẩu đả. Chỉ đến khi anh G- công an xã nhận được tin báo và đến thì mọi việc mới dừng lại. Những ai dưới đây không vi phạm quyền bất khả xâm phạm về chỗ ở của công dân?",
+              opts: ["A. Bà M và chị N.", "B. Vợ chồng anh K.", "C. Anh G và mẹ con bà M.", "D. Chỉ có anh G."], ans: 3 },
+            { q: "Câu 60: Những ai dưới đây vi phạm quyền bất khả xâm phạm về chỗ ở của công dân?",
+              opts: ["A. Bà M và chị N.", "B. Vợ chồng anh K.", "C. Anh G và mẹ con bà M.", "D. Mẹ con bà M và vợ chồng anh K."], ans: 3 },
+            { q: "Câu 61: Hậu quả của hành vi tự ý vào nhà người khác là",
+              opts: ["A. Bị xử lí theo quy định của pháp luật.", "B. Chỉ bị nhắc nhở.", "C. Chỉ bị phạt tiền.", "D. Dù bất cứ lí do nào cũng bị phạt tù."], ans: 0 }
+        ];
+
+        // Phần II: 5 câu đúng sai, mỗi câu có đoạn thông tin và 4 ý
+        const questionsPart2 = [
+            {
+                info: "Câu 1. Do nhiều lần sử dụng xe công vụ để làm việc cá nhân, chậm trễ trong việc báo cáo và có mâu thuẫn với anh P là cấp trên của mình nên anh C (công chức nhà nước) bị anh P ra quyết định kỷ luật và điều chuyển công tác xuống một vị trí thấp hơn trước. Cho rằng quyết định đó chưa hợp lý và không đúng với các quy định của pháp luật, anh C đã làm đơn khiếu nại gửi lãnh đạo cơ quan đề nghị xem xét lại. Trong đơn, anh trình bày trung thực lại sự việc, đồng thời cung cấp đầy đủ các thông tin, tài liệu, chứng cứ có liên quan đến việc khiếu nại. Sau khi gửi đơn và chờ lãnh đạo xem xét giải quyết, anh C đã không chấp hành theo quyết định kỷ luật về điều chuyển công tác mà cấp trên đã ban hành trước đó mà chờ quyết định giải quyết khiếu nại của lãnh đạo cơ quan. Đồng thời anh C đã cắt ghép hình ảnh và đăng lên mạng xã hội những thông tin về các mối quan hệ và đời tư của anh P khiến cho uy tín, danh dự của anh P bị giảm sút.",
+                subs: [
+                    { text: "a) Anh C trình bày trung thực lại sự việc, đồng thời cung cấp đầy đủ các thông tin, tài liệu, chứng cứ có liên quan đến việc khiếu nại là thực hiện đúng nghĩa vụ của người khiếu nại.", ans: true },
+                    { text: "b) Việc anh C không chấp hành theo quyết định kỷ luật về điều chuyển công tác mà cấp trên đã ban hành trước đó là đúng theo quy định của pháp luật.", ans: false },
+                    { text: "c) Anh C cần gửi đơn khiếu nại đến cấp trên của anh C để giải quyết vụ việc, bảo vệ quyền và lợi ích của mình.", ans: false },
+                    { text: "d) Việc anh C đã cắt ghép hình ảnh và đăng lên mạng xã hội những thông tin về các mối quan hệ và đời tư của anh P khiến cho uy tín, danh dự của anh P bị giảm sút là vi phạm quyền bất khả xâm phạm về thân thể của công dân.", ans: false }
+                ]
+            },
+            {
+                info: "Câu 2: Trong cuộc họp thôn bàn về xây dựng nhà văn hóa, vì chị K phát biểu không đúng ý của ông X trưởng thôn nên ông X yêu cầu chị K dừng lời. Thấy vậy bà G lên tiếng phản đối ông X đồng thời đưa ra phương án khả thi để giải phóng mặt bằng. Tuy nhiên, anh D cho rằng bà G chỉ là người dân nên không có quyền đưa ra những ý kiến thuộc về bên thi công công trình như vậy. Bực mình, bà G và chị K bỏ họp ra về. Sau khi chị K và bà G về, anh P yêu cầu ông X cung cấp những văn bản, thông tin của cơ quan có thẩm quyền liên quan đến việc xây dựng nhà văn hóa để người dân cùng tìm hiểu nhưng ông X nói rằng những thông tin đó chỉ những người có chức quyền mới được biết nên ông không thể cho xem.",
+                subs: [
+                    { text: "a) Chị K và bà G đã thực hiện chưa đúng quyền tự do ngôn luận của công dân.", ans: false },
+                    { text: "b) Việc anh P yêu cầu ông X cung cấp những văn bản của cấp trên là đang thực hiện quyền tự do tiếp cận thông tin của công dân.", ans: true },
+                    { text: "c) Ông X đã vi phạm cả quyền tự do ngôn luận và tự do tiếp cận thông tin.", ans: true },
+                    { text: "d) Hành vi của ông X có thể bị xử lí kỉ luật, xử lí hành chính hoặc truy cứu trách nhiệm hình sự.", ans: false }
+                ]
+            },
+            {
+                info: "Câu 3: Chi cục kiểm lâm X có anh K là chi cục trưởng, anh M và anh B là nhân viên. Phát hiện anh M bị anh S là chủ một xưởng gỗ dùng hung khí trấn áp ngay tại phòng trực, anh K cùng anh B đã tìm cách khống chế khiến anh S phải chạy trốn. Do hoảng sợ, anh S xông vào nhà dân và bắt giữ chị H làm con tin. Yêu cầu anh S đầu thú không thành, vì vội đi công tác theo kế hoạch từ trước, anh K phân công anh B báo sự việc với cơ quan chức năng đồng thời có trách nhiệm bảo vệ hiện trường. Ngay sau đó, do bị anh S đe dọa giết, anh B đã khóa cửa nhốt anh S và chị H tại nhà kho của chị rồi bỏ về quê. Vì thấy chị H bị hoảng loạn tinh thần và ngất xỉu, anh S buộc phải kêu gọi một số người dân giúp đỡ đưa chị đi bệnh viện sau đó bỏ trốn khỏi hiện trường.",
+                subs: [
+                    { text: "a) Anh S và anh B cùng vi phạm quyền bất khả xâm phạm về thân thể của công dân.", ans: true },
+                    { text: "b) Anh S vừa vi phạm quyền bất khả xâm phạm về thân thể và chỗ ở của công dân.", ans: true },
+                    { text: "c) Anh K và anh B cùng vi phạm quyền bất khả xâm phạm về thân thể.", ans: false },
+                    { text: "d) Chị H bị vi phạm quyền bất khả xâm phạm về thân thể và tính mạng, sức khỏe.", ans: true }
+                ]
+            },
+            {
+                info: "Câu 4: Không đồng tình với quyết định đền bù của UBND xã X, ông M nhiều lần gửi đơn khiếu nại lên chủ tịch xã nhưng sự việc không được giải quyết. Bức xúc ông chủ động viết bài phản ánh sự việc, sau đó gửi cho một tờ báo lớn của tỉnh, đồng thời gửi đơn kiến nghị tới các đại biểu Quốc hội trong kỳ tiếp xúc cử tri. Sau khi xác minh thông tin trong bài báo do ông M cung cấp, lãnh đạo tòa soạn đã quyết định cho đăng, đồng thời có công văn gửi chủ tịch xã X về nội dung bài báo. Nhờ đó sự việc của ông M đã được giải quyết, quyền và lợi ích hợp pháp của công dân được đảm bảo.",
+                subs: [
+                    { text: "a) Ông M gửi đơn khiếu nại tới chủ tịch UBND xã là thực hiện quyền dân chủ trên lĩnh vực chính trị.", ans: true },
+                    { text: "b) Ông M là người dân không có thẻ nhà báo nên không được trực tiếp viết bài gửi tới tòa soạn báo.", ans: false },
+                    { text: "c) Lãnh đạo tòa soạn gửi công văn thông báo cho chủ tịch xã X về nội dung bài báo của ông M là vi phạm quyền bảo đảm an toàn thư tín, điện thoại, điện tín.", ans: false },
+                    { text: "d) Trong thông tin trên, ông M đã được thực hiện quyền tự do ngôn luận của công dân.", ans: true }
+                ]
+            },
+            {
+                info: "Câu 5. Do nghi ngờ gia đình anh K đang chứa chấp tội phạm truy nã nên ông V đã đến cơ quan công an trình báo. Anh M trưởng công an xã đã yêu cầu anh T là công an viên và anh S trưởng thôn đến khám xét nhà anh K. Yêu cầu cho xem lệnh khám nhà không được, ông K đã ngăn cản việc khám nhà của anh S và anh T. Tuy nhiên anh S và anh T vẫn cố tình xông vào nhà để khám xét nên ông K cùng vợ và con trai là anh U lao vào ngăn cản. Hai bên giằng co, anh T đã đẩy ông K ngã gãy tay. Vợ ông K là bà B lớn tiếng mắng chửi anh T và anh S nên bị hai anh này bắt và đưa về nhốt tại trụ sở công an xã 2 ngày mới được trả về.",
+                subs: [
+                    { text: "a) Anh T và anh S đã vi phạm quyền được pháp luật bảo hộ về tính mạng và sức khỏe của công dân.", ans: false },
+                    { text: "b) Anh T vi phạm quyền được pháp luật bảo hộ về tính mạng, sức khỏe của công dân.", ans: true },
+                    { text: "c) Anh T và anh S cùng vi phạm quyền bất khả xâm phạm về thân thể của công dân.", ans: true },
+                    { text: "d) Bà B và anh U cùng vi phạm quyền được pháp luật bảo hộ về danh dự và nhân phẩm của công dân.", ans: false }
+                ]
+            }
+        ];
+
+        // ================= RENDER GIAO DIỆN =================
+        const examContainer = document.getElementById('examContainer');
+
+        function renderPart1() {
+            let html = '<div class="card"><div class="card-header">📋 PHẦN I: TRẮC NGHIỆM NHIỀU LỰA CHỌN (61 câu)</div><div class="card-body">';
+            questionsPart1.forEach((item, idx) => {
+                html += `<div class="mb-3 question-block" id="p1q${idx}">
+                    <div class="question-text">${item.q}</div>
+                    <div class="options">`;
+                item.opts.forEach((opt, optIdx) => {
+                    html += `<label>
+                        <input type="radio" name="p1_${idx}" value="${optIdx}">
+                        <span>${opt}</span>
+                    </label>`;
+                });
+                html += `</div></div>`;
+            });
+            html += '</div></div>';
+            return html;
+        }
+
+        function renderPart2() {
+            let html = '<div class="card mt-4"><div class="card-header">✅ PHẦN II: TRẮC NGHIỆM ĐÚNG SAI (5 câu)</div><div class="card-body">';
+            questionsPart2.forEach((item, idx) => {
+                html += `<div class="mb-3 question-block" id="p2q${idx}">
+                    <div class="info-box">${item.info}</div>`;
+                item.subs.forEach((sub, subIdx) => {
+                    html += `<div class="sub-option">
+                        <span style="min-width:30px;font-weight:600;">${String.fromCharCode(97+subIdx)})</span>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="p2_${idx}_${subIdx}" value="true" id="p2_${idx}_${subIdx}_true">
+                            <label class="form-check-label" for="p2_${idx}_${subIdx}_true">Đúng</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="p2_${idx}_${subIdx}" value="false" id="p2_${idx}_${subIdx}_false">
+                            <label class="form-check-label" for="p2_${idx}_${subIdx}_false">Sai</label>
+                        </div>
+                        <span style="margin-left:8px;">${sub.text}</span>
+                    </div>`;
+                });
+                html += `</div>`;
+            });
+            html += '</div></div>';
+            return html;
+        }
+
+        examContainer.innerHTML = renderPart1() + renderPart2();
+
+        // ================= ĐỒNG HỒ ĐẾM NGƯỢC =================
+        let totalSeconds = 90 * 60; // 90 phút
+        const timerDisplay = document.getElementById('timerDisplay');
+        function updateTimer() {
+            if (totalSeconds <= 0) {
+                timerDisplay.textContent = '⏰ Hết giờ';
+                submitExam();
+                return;
+            }
+            const m = Math.floor(totalSeconds / 60);
+            const s = totalSeconds % 60;
+            timerDisplay.textContent = `⏳ ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            totalSeconds--;
+        }
+        const timerInterval = setInterval(updateTimer, 1000);
+
+        // ================= NỘP BÀI & CHẤM ĐIỂM =================
+        let submitted = false;
+        function submitExam() {
+            if (submitted) return;
+            submitted = true;
+            clearInterval(timerInterval);
+
+            // Chấm phần I
+            let correct1 = 0;
+            questionsPart1.forEach((item, idx) => {
+                const selected = document.querySelector(`input[name="p1_${idx}"]:checked`);
+                const block = document.getElementById(`p1q${idx}`);
+                if (selected && parseInt(selected.value) === item.ans) {
+                    correct1++;
+                    if (block) block.classList.add('correct-highlight');
+                } else {
+                    if (block) block.classList.add('incorrect-highlight');
+                }
+            });
+
+            // Chấm phần II (mỗi ý 0.25đ)
+            let correct2 = 0;
+            const totalSubs = questionsPart2.reduce((acc, item) => acc + item.subs.length, 0);
+            questionsPart2.forEach((item, idx) => {
+                item.subs.forEach((sub, subIdx) => {
+                    const selected = document.querySelector(`input[name="p2_${idx}_${subIdx}"]:checked`);
+                    if (selected) {
+                        const userAns = selected.value === 'true';
+                        if (userAns === sub.ans) {
+                            correct2++;
+                        }
+                    }
+                });
+            });
+
+            const totalQuestionsPart1 = questionsPart1.length;
+            const scorePart1 = correct1;
+            const scorePart2 = correct2 * 0.25;
+            const totalMax = totalQuestionsPart1 + totalSubs * 0.25;
+            const totalScore = scorePart1 + scorePart2;
+            const grade10 = ((totalScore / totalMax) * 10).toFixed(1);
+
+            // Vô hiệu hóa tất cả input
+            document.querySelectorAll('input[type="radio"]').forEach(inp => inp.disabled = true);
+            document.getElementById('submitBtn').disabled = true;
+
+            // Hiển thị kết quả
+            let resultHtml = `
+                <div class="card mt-4">
+                    <div class="card-header bg-success text-white">📊 KẾT QUẢ BÀI LÀM</div>
+                    <div class="card-body result-summary">
+                        <p>✅ Phần I: ${correct1} / ${totalQuestionsPart1} câu (${scorePart1} điểm)</p>
+                        <p>✅ Phần II: ${correct2} / ${totalSubs} ý đúng (${scorePart2.toFixed(2)} điểm)</p>
+                        <p>🎯 Tổng điểm: <strong>${totalScore.toFixed(2)} / ${totalMax}</strong></p>
+                        <p>📐 Quy đổi thang 10: <strong style="font-size:1.4rem;">${grade10} / 10</strong></p>
+                    </div>
+                </div>`;
+            examContainer.insertAdjacentHTML('beforeend', resultHtml);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
